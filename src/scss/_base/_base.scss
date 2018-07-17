@@ -1,0 +1,46 @@
+html,body {
+    height: 100%;
+}
+html {
+    font-size: $global-font-size;
+    box-sizing: border-box;
+    letter-spacing: $global-letter-spacing;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: $global-font-family;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: $global-font-color;
+    background: $global-background;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+
+a {
+    color: $global-font-color;
+    &:hover{
+        text-decoration: none;
+    }
+}
+
+button{
+    border: none;
+}
+
+input, textarea{
+    font-size: 14px;
+    padding: 5px 8px;
+    border: 1px solid $lily;
+    background-color: $lily;
+    letter-spacing: $global-letter-spacing;
+    @include border-radius(3px);
+    &:focus{
+        outline: none;
+        border: 1px solid $blue;
+        box-shadow: 0 0 5px 0 rgba($light-blue, .5);
+    }
+}
