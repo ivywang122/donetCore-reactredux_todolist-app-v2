@@ -12,7 +12,8 @@ class Todo extends Component{
 
     this.state = {
       isChecked: false,
-      isMarked: false
+      isMarked: false,
+      isCompleted: false
     }
 
   }

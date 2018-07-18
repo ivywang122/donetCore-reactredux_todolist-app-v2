@@ -1,11 +1,8 @@
 ﻿import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
+import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
-import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux'
-import { createLogger } from 'redux-logger'
-import rootReducer from './reducers'
+import configureStore from './store'
 import RouterView from './routes'
 import './scss/styles.css'
 
@@ -16,29 +13,9 @@ const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!./sc
 
 // Create browser history to use in the Redux store
 const history = createHistory()
+const initialState = { todos: [] }
 
-// devToolsEnhacer: to see redux actions log on console
-const logger = createLogger({ collapsed: true })
-
-// In development, use the chorme's Redux dev tools extension if installed
-const devReduxTools = []
-const isDevelopment = process.env.NODE_ENV === 'development';
-if (isDevelopment && typeof window !== 'undefined' && window.devToolsExtension) {
-  devReduxTools.push(window.devToolsExtension())
-}
-
-// Add variety tasks
-const middleWare = applyMiddleware(thunk, routerMiddleware(history), logger)
-
-const initialState = window.initialReduxState
-const store = createStore(
-  combineReducers({
-    ...rootReducer,
-    routing: routerReducer
-  }),
-  initialState,
-  compose(middleWare, ...devReduxTools)
-)
+const store = configureStore(history, initialState)
 
 export default class App extends Component{
   render() {
