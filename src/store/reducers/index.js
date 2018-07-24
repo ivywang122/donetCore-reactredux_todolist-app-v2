@@ -1,12 +1,24 @@
 import actionTypes from '../actionTypes'
 
+let todoId = 0;
+
 const reducers = {
   
   [actionTypes.addTodo]: (state, action) => {
-    return {
-      ...state,
-      todos: action.todos
+
+    let todo = {
+      index: todoId++,
+      title: action.payload.title,
+      comment: action.payload.comment,
+      selectedDay: action.payload.selectedDay,
+      selectTime: action.payload.selectTime,
+      files: action.payload.files,
+      isFile: action.payload.isFile,
+      isMarked: action.payload.isMarked,
+      isCompleted: false
     }
+
+    return [...state, todo]
   }
 
 }

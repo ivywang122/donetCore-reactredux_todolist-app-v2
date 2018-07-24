@@ -43,7 +43,10 @@ class TasksView extends Component {
               <FaPencil className="fa-icon fa-pencil" />
             </TaskTools>
         </InputTaskWrapper>
-        <EditTodo isEdit={this.state.isEdit} onCloseTask={this.onCloseTask} />
+        <EditTodo isEdit={this.state.isEdit} 
+          title={this.state.value} 
+          isMarked={this.state.isMarked} 
+          onCloseTask={this.onCloseTask} />
         <TodoList />
       </TaskContainer>
     );
@@ -78,6 +81,8 @@ class TasksView extends Component {
 
   _onCloseTask() {
     this.setState({
+      value: '',
+      placeholder: 'Add Task',
       isEdit: false,
       isMarked: false,
       appeared: false

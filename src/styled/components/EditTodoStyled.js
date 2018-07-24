@@ -52,7 +52,7 @@ export const Title = styled.h5`
 `;
 
 export const Content = styled.div`
-  display: flex;
+  display: ${props => props.last ? 'block' : 'flex'};
   align-items: center;
   padding: 0 20px;
   margin-bottom: ${props => props.last? '80px' : '0'};
@@ -142,4 +142,9 @@ export const BtnCancel = ButtonStyle.extend`
   &:hover{
     background-color: ${props => props.theme.lily};
   }
+`;
+
+export const WariningText = styled.p`
+  font-size: 12px;
+  color: ${props => props.theme.red};
 `;

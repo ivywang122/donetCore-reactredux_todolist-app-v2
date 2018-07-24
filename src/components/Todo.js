@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { FaPencil, FaStarO, FaStar, FaCalendar, FaFileTextO, FaCommentingO } from 'react-icons/lib/fa'
-import styled from 'styled-components'
 import { TaskToolsDefault } from '../styled/components/TasksViewStyled'
 import Checkbox from '../common/Checkbox'
+import styled from 'styled-components'
 
 class Todo extends Component{
   constructor(props) {
@@ -11,23 +11,40 @@ class Todo extends Component{
     this.onMark = this._onMark.bind(this);
 
     this.state = {
-      isChecked: false,
+      index: 0,
+      title: '',
+      comment: '',
+      selectedDay: undefined,
+      selectTime: undefined,
+      files: [],
+      isFiles: false,
       isMarked: false,
-      isCompleted: false
+      isCompleted: false,
     }
 
   }
 
   componentDidMount() {
-
+    let todo = this.props.todo;
+    this.setState({
+      index: todo.index,
+      title: todo.title,
+      comment: todo.comment,
+      selectedDay: todo.selectedDay,
+      selectTime: todo.selectTime,
+      files: todo.files,
+      isFile: todo.isFile,
+      isMarked: todo.isMarked,
+      isCompleted: todo.isCompleted,
+    });
   }
 
   render() {
-    const { isChecked, isMarked } = this.state;
+    const { isCompleted, isMarked } = this.state;
     return (
       <TodoContainer isMarked={isMarked}>
-        <Checkbox handleInputChange={this.handleInputChange} isChecked={isChecked} />
-        <TodoTitle isChecked={isChecked}>Task Title</TodoTitle>
+        <Checkbox handleInputChange={this.handleInputChange} isChecked={isCompleted} />
+        <TodoTitle isCompleted={isCompleted}>{this.state.title}</TodoTitle>
         <TaskToolsDefault>
           {this.state.isMarked ?
             <FaStar className="fa-icon fa-star" onClick={this.onMark} />
@@ -48,7 +65,7 @@ class Todo extends Component{
   _handleInputChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value
-    this.setState({ isChecked: value });
+    this.setState({ isCompleted: value });
   }
 
   _onMark() {

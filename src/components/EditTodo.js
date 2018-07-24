@@ -4,10 +4,15 @@ import { MdClose } from 'react-icons/lib/md'
 import DayPickerInput from 'react-day-picker/DayPickerInput'
 import TimePicker from 'rc-time-picker'
 import MomentLocaleUtils, { formatDate, parseDate } from 'react-day-picker/moment'
-import moment from 'moment'
 import 'moment/locale/it'
 import Dropzone from 'react-dropzone'
-import { EditTodoWrapper, EditTodoBtnWrapper, Block, Title, Content, DropText, FilesContainer, DropEnterBlock, TextArea, BtnAddTask, BtnCancel} from '../styled/components/EditTodoStyled'
+import { EditTodoWrapper, EditTodoBtnWrapper, 
+  Block, Title, Content, DropText, 
+  FilesContainer, DropEnterBlock, TextArea, 
+  BtnAddTask, BtnCancel, WariningText} from '../styled/components/EditTodoStyled'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import actions from '../store/actions'
 
 class EditTodo extends Component {
   constructor(props) {
@@ -21,14 +26,28 @@ class EditTodo extends Component {
     this.onDragLeave = this._onDragLeave.bind(this);
     this.onDeleteFile = this._onDeleteFile.bind(this);
     this.handleTextChange = this._handleTextChange.bind(this);
+    this.onAddTodo = this._onAddTodo.bind(this);
+    this.onCancelTodo = this._onCancelTodo.bind(this);
 
     this.state = {
+      title: this.props.title,
+      isMarked: this.props.isMarked,
       selectedDay: undefined,
-      selectTime: moment(),
+      selectTime: undefined,
       timeFormat: 'h:mm a',
       files: [],
-      comments: '',
+      comment: '',
       dropzoneActive: false,
+      warningText: ''
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.isMarked !== prevProps.isMarked || this.props.title !== prevProps.title) {
+      this.setState({
+        title: this.props.title,
+        isMarked: this.props.isMarked 
+      })
     }
   }
   render() {
@@ -84,13 +103,15 @@ class EditTodo extends Component {
         <Block index="2">
           <Title><FaCommentingO className="fa-icon" />Comment</Title>
           <Content last>
-            <TextArea value={this.state.comments} onChange={this.handleTextChange} />
+            <TextArea value={this.state.comment} onChange={this.handleTextChange} />
+            <WariningText>{this.state.warningText}</WariningText>
           </Content>
         </Block>
 
+
         <EditTodoBtnWrapper>
-          <BtnCancel onClick={this.props.onCloseTask}><MdClose /> Cancel</BtnCancel>
-          <BtnAddTask><FaPlus /> Add Task</BtnAddTask>
+          <BtnCancel onClick={this.onCancelTodo}><MdClose /> Cancel</BtnCancel>
+          <BtnAddTask onClick={this.onAddTodo}><FaPlus /> Add Task</BtnAddTask>
         </EditTodoBtnWrapper>
 
       </EditTodoWrapper>
@@ -154,9 +175,57 @@ class EditTodo extends Component {
   }
 
   _handleTextChange(event) {
-    this.setState({ comments: event.target.value });
+    this.setState({ comment: event.target.value });
+  }
+
+  _onAddTodo() {
+    let todo = {
+      title: this.state.title,
+      comment: this.state.comment,
+      selectedDay: this.state.selectedDay,
+      selectTime: this.state.selectTime,
+      files: this.state.files,
+      isFile: this.state.files.length > 0,
+      isMarked: this.state.isMarked
+    }
+
+    if(!this.isEmpty(todo.title)) {
+      this.props.todoActions.addTodo(todo)
+      this.setState({ warningText: '' }, this.props.onCloseTask())
+    }
+    else 
+      this.setState({ warningText: '*Please type something as Task Title' })
+
+  }
+
+  _onCancelTodo() {
+    this.setState({
+      selectedDay: undefined,
+      selectTime: undefined,
+      timeFormat: 'h:mm a',
+      files: [],
+      comment: '',
+      dropzoneActive: false,
+      warningText: ''
+    });
+    this.props.onCloseTask();
+  }
+
+  isEmpty(str) {
+    if (str.replace(/(^s*)|(s*$)/g, "").length === 0) return true;
+    else return false;
   }
 
 }
 
-export default EditTodo
+const mapStateToProps = state => {
+  return state
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    todoActions: bindActionCreators(actions.todoActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditTodo)

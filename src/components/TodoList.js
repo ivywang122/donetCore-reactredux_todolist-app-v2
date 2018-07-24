@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
+import { connect } from 'react-redux'
 import Todo from './Todo'
 
 class TodoList extends Component{
@@ -7,23 +7,52 @@ class TodoList extends Component{
     super(props);
 
     this.state = {
-      Todos: [],
-
+      todos: [],
     }
   }
 
   componentDidMount() {
+    this.setState({ todos: this.props.todos })
+  }
 
+  componentDidUpdate(prevProps) {
+    if (!this.isObjValEqual(prevProps.todos, this.props.todos))
+      this.setState({ todos: this.props.todos })
   }
 
   render() {
+    const todos = this.state.todos;
     return (
       <div>
-        <Todo />
+        {todos && todos.map((todo, index) => {
+          return <Todo key={todo.index} todo={todo} />
+        })}
+
       </div>
     );
   }
+
+  isObjValEqual(obj1, obj2) {
+    let aProps = Object.getOwnPropertyNames(obj1),
+        bProps = Object.getOwnPropertyNames(obj2);
+    
+    if (aProps.length !== bProps.length) 
+      return false;
+    
+    for(let i = 0; i < aProps.length; i++) {
+      let propName = aProps[i];
+      if(obj1[propName] !== obj2[propName]) 
+        return false;
+    }
+
+    return true;
+  }
+
 }
 
 
-export default TodoList
+const mapStateToProps = state => {
+  return state
+}
+
+export default connect(mapStateToProps)(TodoList)
