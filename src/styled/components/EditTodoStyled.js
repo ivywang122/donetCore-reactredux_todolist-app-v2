@@ -3,11 +3,11 @@ import styled, { keyframes, css } from 'styled-components'
 export const EditTodoWrapper = styled.div`
   background-color: ${props => props.theme.white};
   border-radius: 0 0 3px 3px;
-  transition: .8s ease-in-out;
+  transition: ${props => props.height > 551? '0s' : '.8s ease-in-out' };
   transform-origin: 0 0;
   padding: ${props => props.isEdit? '20px' : '0px'};
-  height: ${props => props.isEdit? 'auto' : '0%'};
-  transform: ${props => props.isEdit ? 'scaleY(1)' : 'scaleY(0)'};
+  height: ${props => props.isEdit? props.height+'px' : '0px'};
+  transform: ${props => props.isEdit? 'scaleY(1)' : 'scaleY(0)'};
   position: relative;
 
   ${props => props.isEdit && css`
@@ -38,7 +38,7 @@ const slowEaseOut = keyframes`
 `;
 
 const delayTimout = props => {
-  if (props.isEdit == false)
+  if (props.isEdit === false)
     return 0;
   else
     return props.index * 0.35 + 0.7;

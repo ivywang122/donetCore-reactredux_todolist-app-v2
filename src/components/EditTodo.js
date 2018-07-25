@@ -38,7 +38,8 @@ class EditTodo extends Component {
       files: [],
       comment: '',
       dropzoneActive: false,
-      warningText: ''
+      warningText: '',
+      wrapperHeight: 551
     }
   }
 
@@ -50,10 +51,13 @@ class EditTodo extends Component {
       })
     }
   }
-  render() {
 
+
+  render() {
     return(
-      <EditTodoWrapper isEdit={this.props.isEdit} >
+      <EditTodoWrapper innerRef={elem => this.elemDiv = elem}
+        isEdit={this.props.isEdit}
+        height={this.state.wrapperHeight} >
         <Block index="0" className="picker-zindex">
           <Title><FaCalendar className="fa-icon" />Deadline</Title>
           <Content>
@@ -63,8 +67,8 @@ class EditTodo extends Component {
               format="YYYY/MM/DD"
               placeholder={`${formatDate(new Date(), 'YYYY/MM/DD', 'it')}`}
               dayPickerProps={{ locale: 'it', localeUtils: MomentLocaleUtils }}
-              selectedDays={this.state.selectedDay}
-              onDayClick={this.handleDayPick} />
+              value={this.state.selectedDay}
+              onDayChange={this.handleDayPick} />
             <TimePicker use12Hours inputReadOnly
               showSecond={false}
               defaultValue={this.state.selectTime}
@@ -128,8 +132,8 @@ class EditTodo extends Component {
     );
   }
 
-  _handleDayPick(day, { selected }) {
-    this.setState({ selectedDay: selected? undefined : day });
+  _handleDayPick(day) {
+    this.setState({ selectedDay: day });
   }
 
   _handleTimePick(time) {
@@ -153,8 +157,10 @@ class EditTodo extends Component {
  
     this.setState({
       files: allFiles,
-      dropzoneActive: false
+      dropzoneActive: false,
+      wrapperHeight: 552 + allFiles.length * 31
     });
+
   }
 
   _onDragEnter() {
@@ -166,12 +172,19 @@ class EditTodo extends Component {
   }
 
   _onDeleteFile(event, file) {
-    let files = this.state.files;
+    let files = this.state.files,
+      wrapperHeight = this.state.wrapperHeight;
+
     for(let i = files.length -1; i >= 0; i--){
       if(files[i] === file) files.splice(i, 1);
     }
 
-    this.setState({ files });
+    if(files.length === 0)
+      wrapperHeight = 552;
+    else 
+      wrapperHeight = wrapperHeight - 31;
+
+    this.setState({ files, wrapperHeight: wrapperHeight });
   }
 
   _handleTextChange(event) {
@@ -206,8 +219,10 @@ class EditTodo extends Component {
       files: [],
       comment: '',
       dropzoneActive: false,
-      warningText: ''
+      warningText: '',
+      wrapperHeight: 551
     });
+  
     this.props.onCloseTask();
   }
 
