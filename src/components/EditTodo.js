@@ -204,7 +204,16 @@ class EditTodo extends Component {
 
     if(!this.isEmpty(todo.title)) {
       this.props.todoActions.addTodo(todo)
-      this.setState({ warningText: '' }, this.props.onCloseTask())
+      this.setState({ 
+        selectedDay: undefined,
+        selectTime: undefined,
+        timeFormat: 'h:mm a',
+        files: [],
+        comment: '',
+        dropzoneActive: false,
+        warningText: '',
+        wrapperHeight: 551
+      }, this.props.onCloseTask())
     }
     else 
       this.setState({ warningText: '*Please type something as Task Title' })
