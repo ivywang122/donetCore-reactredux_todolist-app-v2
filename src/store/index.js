@@ -20,7 +20,7 @@ export default function configureStore(history, initialState) {
   const middleWare = applyMiddleware(thunk, routerMiddleware(history), logger)
 
   const reducers = combineReducers({
-    todos: createReducer({}),
+    todos: createReducer([]),
     routing: routerReducer,
   })
 

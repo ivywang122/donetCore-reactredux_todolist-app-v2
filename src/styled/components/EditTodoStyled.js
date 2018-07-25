@@ -6,25 +6,42 @@ export const EditTodoWrapper = styled.div`
   transition: .8s ease-in-out;
   transform-origin: 0 0;
   padding: ${props => props.isEdit? '20px' : '0px'};
-  height: ${props => props.isEdit? '545px' : '0px'};
-  opacity: ${props => props.isEdit ? '1' : '0'};
+  height: ${props => props.isEdit? 'auto' : '0%'};
   transform: ${props => props.isEdit ? 'scaleY(1)' : 'scaleY(0)'};
   position: relative;
 
   ${props => props.isEdit && css`
     ${Block} {
       animation-name: ${slowEaseIn};
+      animation-duration: .8s;
     }
   `}
+
+  ${props => !props.isEdit && css`
+    ${Block} {
+      animation-name: ${slowEaseOut};
+      animation-duration: .5s;
+      animation-delay: ${props => delayTimout(props) + 's'};
+    }
+  `}
+
 `;
 
 const slowEaseIn = keyframes`
-  from { opacity: 0; transform: translateY(15px) }
-  to { opacity: 1; transform: translateY(0)}
+  from { visibility: hidden; opacity: 0; transform: translateY(15px) }
+  to { visibility: visible; opacity: 1; transform: translateY(0) }
 `;
 
-const delayTimout = index => {
-  return index * 0.35 + 1
+const slowEaseOut = keyframes`
+  from { visibility: visible; opacity: 1; transform: translateY(0) }
+  to { visibility: hidden; opacity: 0; transform: translateY(15px) }
+`;
+
+const delayTimout = props => {
+  if (props.isEdit == false)
+    return 0;
+  else
+    return props.index * 0.35 + 0.7;
 }
 
 export const Block = styled.div`
@@ -32,13 +49,15 @@ export const Block = styled.div`
   margin-bottom: 40px;
   padding: 0 20px;
   /* animation-name: ${slowEaseIn}; */
-  animation-duration: 1s;
-  animation-delay: ${props => props.index? delayTimout(props.index)+'s' : '1.65s'};
+  animation-delay: ${props => delayTimout(props)+'s'};
   animation-fill-mode: both;
+  
   &.picker-zindex{
     z-index: 50;
   }
 `;
+
+
 
 export const Title = styled.h5`
   font-size: 18px;

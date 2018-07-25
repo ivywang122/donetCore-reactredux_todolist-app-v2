@@ -7,21 +7,21 @@ class TodoList extends Component{
     super(props);
 
     this.state = {
-      todos: [],
+      
     }
   }
 
-  componentDidMount() {
-    this.setState({ todos: this.props.todos })
-  }
+  // componentDidMount() {
+  //   this.setState({ todos: this.props.todos })
+  // }
 
-  componentDidUpdate(prevProps) {
-    if (!this.isObjValEqual(prevProps.todos, this.props.todos))
-      this.setState({ todos: this.props.todos })
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (!this.isObjValEqual(prevProps.todos, this.props.todos))
+  //     this.setState({ todos: this.props.todos })
+  // }
 
   render() {
-    const todos = this.state.todos;
+    const todos = this.props.todos;
     return (
       <div>
         {todos && todos.map((todo, index) => {

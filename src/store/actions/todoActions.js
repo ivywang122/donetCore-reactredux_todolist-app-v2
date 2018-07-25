@@ -16,3 +16,17 @@ export function addTodo(todo) {
     payload
   }
 }
+
+export function completeTodo(index) {
+  return {
+    type: actionTypes.completeTodo,
+    index
+  }
+}
+
+export function markTodo(index) {
+  return {
+    type: actionTypes.markTodo,
+    index
+  }
+}

@@ -19,10 +19,22 @@ const reducers = {
     }
 
     return [...state, todo]
+  },
+
+  [actionTypes.completeTodo]: (state, action) => {
+    return state.map(todo => 
+      todo.index === action.index? {...todo, isCompleted: !todo.isCompleted} : todo
+    )
+  },
+
+  [actionTypes.markTodo]: (state, action) => {
+    return state.map(todo => 
+      todo.index === action.index? {...todo, isMarked: !todo.isMarked} : todo
+    )
   }
 
 }
-
+// initialState = []; from Store
 export default function createReducer(initialState) {
   return function reducer(state = initialState, action) {
     if (reducers.hasOwnProperty(action.type))

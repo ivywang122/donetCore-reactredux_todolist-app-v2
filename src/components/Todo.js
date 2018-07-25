@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { FaPencil, FaStarO, FaStar, FaCalendar, FaFileTextO, FaCommentingO } from 'react-icons/lib/fa'
 import { TaskToolsDefault } from '../styled/components/TasksViewStyled'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import actions from '../store/actions'
 import Checkbox from '../common/Checkbox'
 import styled from 'styled-components'
 
@@ -11,45 +14,31 @@ class Todo extends Component{
     this.onMark = this._onMark.bind(this);
 
     this.state = {
-      index: 0,
-      title: '',
-      comment: '',
-      selectedDay: undefined,
-      selectTime: undefined,
-      files: [],
-      isFiles: false,
-      isMarked: false,
-      isCompleted: false,
+
     }
 
   }
 
   componentDidMount() {
-    let todo = this.props.todo;
-    this.setState({
-      index: todo.index,
-      title: todo.title,
-      comment: todo.comment,
-      selectedDay: todo.selectedDay,
-      selectTime: todo.selectTime,
-      files: todo.files,
-      isFile: todo.isFile,
-      isMarked: todo.isMarked,
-      isCompleted: todo.isCompleted,
-    });
+
+  }
+
+  componentDidUpdate(prevProps) {
+
   }
 
   render() {
-    const { isCompleted, isMarked } = this.state;
+    const todo = this.props.todo;
+    // const { isCompleted, isMarked } = this.state;
     return (
-      <TodoContainer isMarked={isMarked}>
-        <Checkbox handleInputChange={this.handleInputChange} isChecked={isCompleted} />
-        <TodoTitle isCompleted={isCompleted}>{this.state.title}</TodoTitle>
+      <TodoContainer isMarked={todo.isMarked}>
+        <Checkbox handleInputChange={event => this.handleInputChange(event, todo)} isChecked={todo.isCompleted} />
+        <TodoTitle isCompleted={todo.isCompleted}>{todo.title}</TodoTitle>
         <TaskToolsDefault>
-          {this.state.isMarked ?
-            <FaStar className="fa-icon fa-star" onClick={this.onMark} />
+          {todo.isMarked ?
+            <FaStar className="fa-icon fa-star" onClick={event => this.onMark(event, todo)} />
             :
-            <FaStarO className="fa-icon fa-starO" onClick={this.onMark} />
+            <FaStarO className="fa-icon fa-starO" onClick={event => this.onMark(event, todo)} />
           }
           <FaPencil className="fa-icon fa-pencil" />
         </TaskToolsDefault>
@@ -62,15 +51,12 @@ class Todo extends Component{
     );
   }
 
-  _handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    this.setState({ isCompleted: value });
+  _handleInputChange(event, todo) {
+    this.props.todoActions.completeTodo(todo.index)
   }
 
-  _onMark() {
-    let isMarked = this.state.isMarked ? false : true;
-    this.setState({ isMarked });
+  _onMark(event, todo) {
+    this.props.todoActions.markTodo(todo.index)
   }
 
 }
@@ -89,10 +75,21 @@ const TodoTitle = styled.h2`
   display: inline-block;
   font-size: 24px;
   font-weight: bold;
-  color: ${props => props.theme.darkGray};
+  color: ${props => props.isCompleted ? props.theme.silver : props.theme.darkGray};
+  text-decoration: ${props => props.isCompleted ? 'line-through' : 'none'};
   margin: 0 0 0 10px;
   vertical-align: middle;
 `;
 
 
-export default Todo
+const mapStateToProps = state => {
+  return state
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    todoActions: bindActionCreators(actions.todoActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Todo)
