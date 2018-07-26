@@ -3,6 +3,7 @@ import { FaPencil, FaStarO, FaStar, FaCalendar, FaFileTextO, FaCommentingO } fro
 import { TaskToolsDefault } from '../styled/components/TasksViewStyled'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import actions from '../store/actions'
 import Checkbox from '../common/Checkbox'
 import styled from 'styled-components'
@@ -10,6 +11,7 @@ import styled from 'styled-components'
 class Todo extends Component{
   constructor(props) {
     super(props);
+    this.renderInfoWrapper = this._renderInfoWrapper.bind(this);
     this.handleInputChange = this._handleInputChange.bind(this);
     this.onMark = this._onMark.bind(this);
 
@@ -29,7 +31,7 @@ class Todo extends Component{
 
   render() {
     const todo = this.props.todo;
-    // const { isCompleted, isMarked } = this.state;
+    const selectedDay = todo.selectedDay? moment(todo.selectedDay).format('YYYY/MM/DD') : undefined;
     return (
       <TodoContainer isMarked={todo.isMarked}>
         <Checkbox handleInputChange={event => this.handleInputChange(event, todo)} isChecked={todo.isCompleted} />
@@ -42,13 +44,49 @@ class Todo extends Component{
           }
           <FaPencil className="fa-icon fa-pencil" />
         </TaskToolsDefault>
-        <div>
-          <FaCalendar />
-          <FaFileTextO />
-          <FaCommentingO />
-        </div>
+
+        { this.renderInfoWrapper(todo, selectedDay) }
+        
+       
+
       </TodoContainer>
     );
+  }
+
+  _renderInfoWrapper(todo, selectedDay) {
+    if (selectedDay || todo.isFile || todo.comment.length > 0) {
+      return (
+        <TodoIfnoWrapper>
+          {selectedDay ?
+            <span>
+              <FaCalendar className="fa-icon" /><InfoText>{selectedDay}</InfoText>
+            </span>
+            :
+            null
+          }
+
+          {todo.isFile ?
+            <span>
+              <FaFileTextO className="fa-icon" /><InfoText>{todo.files.length}</InfoText>
+            </span>
+            :
+            null
+          }
+
+          {todo.comment.length > 0 ?
+            <span>
+              <FaCommentingO className="fa-icon" /><InfoText comment>{todo.comment}</InfoText>
+            </span>
+            :
+            null
+          }
+
+        </TodoIfnoWrapper>
+
+      );
+    }else return null;
+    
+
   }
 
   _handleInputChange(event, todo) {
@@ -79,6 +117,30 @@ const TodoTitle = styled.h2`
   text-decoration: ${props => props.isCompleted ? 'line-through' : 'none'};
   margin: 0 0 0 10px;
   vertical-align: middle;
+`;
+
+const TodoIfnoWrapper = styled.div`
+  margin-top: 10px;
+  color: ${props => props.theme.materialSteel};
+  span{
+    margin-right: 10px;
+  }
+  .fa-icon{
+    vertical-align: text-top;
+    font-size: 20px;
+    padding-right: 5px;
+  }
+`;
+
+const InfoText = styled.span`
+  vertical-align: bottom;
+  font-size: 14px;
+  display: ${props => props.comment? 'inline-block' : 'inline'};
+  text-overflow: ${props => props.comment? 'ellipsis' : 'clip'};
+  width: ${props => props.comment? '140px' : 'auto'};
+  white-space: nowrap;
+  overflow : hidden;
+  color: ${props => props.theme.darkGray};
 `;
 
 
