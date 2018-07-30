@@ -1,6 +1,8 @@
 import styled, { css } from 'styled-components'
 
 export const ChkboxStyled = styled.label`
+  display: inline-block;
+  box-sizing: border-box;
   cursor: pointer;
   width: 20px;
   height: 20px;
@@ -15,9 +17,9 @@ export const ChkboxStyled = styled.label`
       content: '';
       position: absolute;
       transform: rotate(-45deg);
-      top: 3px;
+      top: 2px;
       left: 2px;
-      width: 12px;
+      width: 10px;
       height: 6px;
       border: 2px solid ${props => props.theme.white};
       border-top-style: none;

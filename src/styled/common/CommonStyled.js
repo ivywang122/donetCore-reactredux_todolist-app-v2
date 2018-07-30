@@ -33,6 +33,6 @@ export const FlexLinks = FlexContainer.extend`
 
 export const BodyBackGround = styled.section`
   background-color: ${props => props.theme.lightGray};
-  padding: 20px 0;
+  padding: 30px 0;
   min-height: calc(100vh - 65px);
 `

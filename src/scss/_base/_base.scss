@@ -20,11 +20,23 @@ body {
     box-sizing: border-box;
 }
 
+section, div {
+ box-sizing: border-box;   
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem; 
+}
+
 a {
     color: $global-font-color;
-    &:hover{
-        text-decoration: none;
-    }
+    text-decoration: none;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 button{
@@ -32,6 +44,10 @@ button{
 }
 
 input, textarea{
+    font-family: "Roboto", "Arial", sans-serif;
+    box-sizing: border-box;
+    line-height: 1.5;
+    height: auto;
     font-size: 14px;
     padding: 5px 8px;
     border: 1px solid $lily;
