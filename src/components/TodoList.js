@@ -32,6 +32,11 @@ class TodoList extends Component{
         return <Todo key={todo.index} todo={todo} />
       });
 
+    } else if (this.props.isTodosInProgress) {
+      return todos && todos.filter(todo => !todo.isCompleted).map((todo, index) => {
+        return <Todo key={todo.index} todo={todo} />
+      });
+
     }else {
       return todos && todos.map((todo, index) => {
         return <Todo key={todo.index} todo={todo} />
