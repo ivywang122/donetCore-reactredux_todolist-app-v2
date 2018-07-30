@@ -30,3 +30,20 @@ export function markTodo(index) {
     index
   }
 }
+
+export function addCompletedTodo(todo) {
+  let payload = {
+    title: todo.title,
+    comment: todo.comment,
+    selectedDay: todo.selectedDay,
+    selectTime: todo.selectTime,
+    files: todo.files,
+    isFile: todo.isFile,
+    isMarked: todo.isMarked
+  }
+
+  return {
+    type: actionTypes.addCompletedTodo,
+    payload
+  }
+}

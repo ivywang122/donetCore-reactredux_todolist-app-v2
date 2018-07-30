@@ -202,9 +202,17 @@ class EditTodo extends Component {
       isMarked: this.state.isMarked
     }
 
-    if(!this.isEmpty(todo.title)) {
-      this.props.todoActions.addTodo(todo)
-      this.setState({ 
+    if(this.isEmpty(todo.title)) {
+      this.setState({ warningText: '*Please type something as Task Title' })
+    }else {
+      // Add Completed Todo
+      if (this.props.completedAdd)
+        this.props.todoActions.addCompletedTodo(todo)
+      // Add In Progress Todo
+      else
+        this.props.todoActions.addTodo(todo)
+      
+      this.setState({
         selectedDay: undefined,
         selectTime: undefined,
         timeFormat: 'h:mm a',
@@ -215,8 +223,7 @@ class EditTodo extends Component {
         wrapperHeight: 551
       }, this.props.onCloseTask())
     }
-    else 
-      this.setState({ warningText: '*Please type something as Task Title' })
+      
 
   }
 

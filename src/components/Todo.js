@@ -46,8 +46,6 @@ class Todo extends Component{
         </TaskToolsDefault>
 
         { this.renderInfoWrapper(todo, selectedDay) }
-        
-       
 
       </TodoContainer>
     );

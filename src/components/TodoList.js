@@ -7,7 +7,7 @@ class TodoList extends Component{
     super(props);
 
     this.state = {
-      
+
     }
   }
 
@@ -20,16 +20,25 @@ class TodoList extends Component{
   //     this.setState({ todos: this.props.todos })
   // }
 
-  render() {
-    const todos = this.props.todos;
-    return (
-      <div>
-        {todos && todos.map((todo, index) => {
-          return <Todo key={todo.index} todo={todo} />
-        })}
+  render() { 
+    return <div>{this.renderTodos()}</div>
+  }
 
-      </div>
-    );
+  renderTodos() {
+    const todos = this.props.todos;
+
+    if (this.props.isTodosCompleted) {
+      return todos && todos.filter(todo => todo.isCompleted).map((todo, index) => {
+        return <Todo key={todo.index} todo={todo} />
+      });
+
+    }else {
+      return todos && todos.map((todo, index) => {
+        return <Todo key={todo.index} todo={todo} />
+      });
+
+    }
+
   }
 
   isObjValEqual(obj1, obj2) {

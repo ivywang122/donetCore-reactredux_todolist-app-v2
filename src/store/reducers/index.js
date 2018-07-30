@@ -31,6 +31,22 @@ const reducers = {
     return state.map(todo => 
       todo.index === action.index? {...todo, isMarked: !todo.isMarked} : todo
     )
+  },
+
+  [actionTypes.addCompletedTodo]: (state, action) => {
+    let todo = {
+      index: todoId++,
+      title: action.payload.title,
+      comment: action.payload.comment,
+      selectedDay: action.payload.selectedDay,
+      selectTime: action.payload.selectTime,
+      files: action.payload.files,
+      isFile: action.payload.isFile,
+      isMarked: action.payload.isMarked,
+      isCompleted: true
+    }
+
+    return [...state, todo]
   }
 
 }
