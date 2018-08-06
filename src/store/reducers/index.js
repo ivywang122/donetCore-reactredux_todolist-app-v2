@@ -69,7 +69,13 @@ const reducers = {
     return state.map(todo =>
       todo.index === action.index ? { ...todo, isEdit: false } : todo
     )
-  }  
+  },
+  
+  [actionTypes.closeAllEditTodo]: (state, action) => {
+    return state.map(todo => {
+      return { ...todo, isEdit: false }
+    })
+  }
 
 }
 // initialState = []; from Store

@@ -69,3 +69,9 @@ export function onCloseEditTodo(index) {
     index
   }
 }
+
+export function closeAllEditTodo() {
+  return {
+    type: actionTypes.closeAllEditTodo,
+  }
+}

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { FaPlus, FaPencil, FaStarO, FaStar } from 'react-icons/lib/fa'
 import { TaskContainer, InputTaskWrapper, InputTask, TaskTools } from '../styled/components/TasksViewStyled'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import actions from '../store/actions'
 import EditTodo from './EditTodo'
 import TodoList from './TodoList'
 
@@ -89,6 +92,9 @@ class ViewContainer extends Component {
       placeholder: 'Type Something Here...',
       isEdit: true,
       focused: true
+    }, () => {
+      if(this.props.todos.length > 0)
+        this.props.todoActions.closeAllEditTodo()
     });
   }
 
@@ -110,4 +116,14 @@ class ViewContainer extends Component {
 
 }
 
-export default ViewContainer
+const mapStateToProps = state => {
+  return state
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    todoActions: bindActionCreators(actions.todoActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewContainer)
