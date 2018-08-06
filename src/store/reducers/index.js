@@ -7,6 +7,7 @@ const reducers = {
   [actionTypes.addTodo]: (state, action) => {
 
     let todo = {
+      isEdit: false,
       index: todoId++,
       title: action.payload.title,
       comment: action.payload.comment,
@@ -53,7 +54,22 @@ const reducers = {
     return state.map(todo =>
       todo.index === action.index ? { ...todo, files: action.cacheFiles } : todo
     )
-  }
+  },
+
+  [actionTypes.onEditTodo]: (state, action) => {
+    return state.map(todo => {
+      if(todo.index === action.index)
+        return {...todo, isEdit: true }
+      else
+        return {...todo, isEdit: false }
+    })
+  },
+
+  [actionTypes.onCloseEditTodo]: (state, action) => {
+    return state.map(todo =>
+      todo.index === action.index ? { ...todo, isEdit: false } : todo
+    )
+  }  
 
 }
 // initialState = []; from Store

@@ -20,8 +20,7 @@ class Todo extends Component{
     this.onCloseTask = this._onCloseTask.bind(this);
 
     this.state = {
-      title: this.props.todo.title,
-      isEdit: false
+      title: this.props.todo.title
     }
 
   }
@@ -39,9 +38,9 @@ class Todo extends Component{
     const selectedDay = todo.selectedDay? moment(todo.selectedDay).format('YYYY/MM/DD') : undefined;
     return (
       <div>
-        <TodoContainer isMarked={todo.isMarked} isEdit={this.state.isEdit}>
+        <TodoContainer isMarked={todo.isMarked} isEdit={todo.isEdit}>
           <Checkbox handleInputChange={event => this.handleInputChange(event, todo)} isChecked={todo.isCompleted} />
-          {this.state.isEdit? 
+          {todo.isEdit? 
             <TodoTitle type="text" isCompleted={todo.isCompleted} value={this.state.title} onChange={this.handleChange} />
             :
             <TodoTitle type="text" disabled isCompleted={todo.isCompleted} value={todo.title} onChange={this.handleChange} />
@@ -60,7 +59,7 @@ class Todo extends Component{
         </TodoContainer>
 
         <EditTodo todo={todo} forEditSave
-          isEdit={this.state.isEdit}
+          isEdit={todo.isEdit}
           title={this.state.title}
           isMarked={todo.isMarked}
           onCloseTask={this.onCloseTask} />
@@ -113,7 +112,7 @@ class Todo extends Component{
   }
 
   _handleChange(event) {
-    this.setState({ title: event.target.value });
+    this.setState({ title: event.target.value })
   }
 
   _onMark(event, todo) {
@@ -121,15 +120,16 @@ class Todo extends Component{
   }
 
   _onEdit(event, todo) {
-    if (!this.state.isEdit)
-      this.setState({ isEdit: true })
+    if(!todo.isEdit)
+      this.props.todoActions.onEditTodo(todo.index)
   }
 
   _onCloseTask() {
-    this.setState({
-      title: this.props.todo.title,
-      isEdit: false
-    });
+    let todo = this.props.todo;
+    if(todo.isEdit) {
+      this.props.todoActions.onCloseEditTodo(todo.index)
+      this.setState({ title: todo.title })
+    }
   }
 
 }

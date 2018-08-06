@@ -9,6 +9,8 @@ class TodoList extends Component{
     this.state = {
 
     }
+
+    this.onCloseOtherEditMode = this._onCloseOtherEditMode.bind(this);
   }
 
   // componentDidMount() {
@@ -64,6 +66,10 @@ class TodoList extends Component{
     }
 
     return true;
+  }
+
+  _onCloseOtherEditMode(index) {
+
   }
 
 }

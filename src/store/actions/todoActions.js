@@ -55,3 +55,17 @@ export function pushCacheToFiles(index, cacheFiles) {
     cacheFiles
   }
 }
+
+export function onEditTodo(index) {
+  return {
+    type: actionTypes.onEditTodo,
+    index
+  }
+}
+
+export function onCloseEditTodo(index) {
+  return {
+    type: actionTypes.onCloseEditTodo,
+    index
+  }
+}

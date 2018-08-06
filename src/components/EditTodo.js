@@ -52,8 +52,8 @@ class EditTodo extends Component {
       this.setState({
         selectedDay: todo.selectedDay,
         selectTime: todo.selectTime,
-        cacheFiles: [...todo.files],
         files: todo.files,
+        cacheFiles: [...todo.files],
         comment: todo.comment,
         wrapperHeight: 551 + todo.files.length * 31
       })
@@ -271,7 +271,6 @@ class EditTodo extends Component {
   
     this.props.onCloseTask();
   }
-
   _onSaveTodo() {
     let todo = {
       title: this.state.title,
@@ -310,7 +309,8 @@ class EditTodo extends Component {
       comment: todo.comment,
       wrapperHeight: 551 + this.state.cacheFiles.length * 31
     }, () => {
-      this.props.todoActions.pushCacheToFiles(todo.index, this.state.cacheFiles)
+      if(todo.files !== this.state.cacheFiles)
+        this.props.todoActions.pushCacheToFiles(todo.index, this.state.cacheFiles)
       this.props.onCloseTask()
     })
   }
