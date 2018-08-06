@@ -4,19 +4,24 @@ import { TaskToolsDefault } from '../styled/components/TasksViewStyled'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import { TodoContainer, TodoTitle, TodoIfnoWrapper, InfoText } from '../styled/components/TodoStyled'
 import actions from '../store/actions'
 import Checkbox from '../common/Checkbox'
-import styled from 'styled-components'
+import EditTodo from './EditTodo'
 
 class Todo extends Component{
   constructor(props) {
     super(props);
     this.renderInfoWrapper = this._renderInfoWrapper.bind(this);
     this.handleInputChange = this._handleInputChange.bind(this);
+    this.handleChange = this._handleChange.bind(this);
     this.onMark = this._onMark.bind(this);
+    this.onEdit = this._onEdit.bind(this);
+    this.onCloseTask = this._onCloseTask.bind(this);
 
     this.state = {
-
+      title: this.props.todo.title,
+      isEdit: false
     }
 
   }
@@ -33,25 +38,41 @@ class Todo extends Component{
     const todo = this.props.todo;
     const selectedDay = todo.selectedDay? moment(todo.selectedDay).format('YYYY/MM/DD') : undefined;
     return (
-      <TodoContainer isMarked={todo.isMarked}>
-        <Checkbox handleInputChange={event => this.handleInputChange(event, todo)} isChecked={todo.isCompleted} />
-        <TodoTitle isCompleted={todo.isCompleted}>{todo.title}</TodoTitle>
-        <TaskToolsDefault>
-          {todo.isMarked ?
-            <FaStar className="fa-icon fa-star" onClick={event => this.onMark(event, todo)} />
+      <div>
+        <TodoContainer isMarked={todo.isMarked} isEdit={this.state.isEdit}>
+          <Checkbox handleInputChange={event => this.handleInputChange(event, todo)} isChecked={todo.isCompleted} />
+          {this.state.isEdit? 
+            <TodoTitle type="text" isCompleted={todo.isCompleted} value={this.state.title} onChange={this.handleChange} />
             :
-            <FaStarO className="fa-icon fa-starO" onClick={event => this.onMark(event, todo)} />
+            <TodoTitle type="text" disabled isCompleted={todo.isCompleted} value={todo.title} onChange={this.handleChange} />
           }
-          <FaPencil className="fa-icon fa-pencil" />
-        </TaskToolsDefault>
+          <TaskToolsDefault>
+            {todo.isMarked ?
+              <FaStar className="fa-icon fa-star" onClick={event => this.onMark(event, todo)} />
+              :
+              <FaStarO className="fa-icon fa-starO" onClick={event => this.onMark(event, todo)} />
+            }
+            <FaPencil className="fa-icon fa-pencil" onClick={event => this.onEdit(event, todo)}/>
+          </TaskToolsDefault>
 
-        { this.renderInfoWrapper(todo, selectedDay) }
+          { this.renderInfoWrapper(todo, selectedDay) }
 
-      </TodoContainer>
+        </TodoContainer>
+
+        <EditTodo todo={todo} forEditSave
+          isEdit={this.state.isEdit}
+          title={this.state.title}
+          isMarked={todo.isMarked}
+          onCloseTask={this.onCloseTask} />
+
+      </div>
     );
   }
 
   _renderInfoWrapper(todo, selectedDay) {
+    if (this.state.isEdit)
+      return null
+
     if (selectedDay || todo.isFile || todo.comment.length > 0) {
       return (
         <TodoIfnoWrapper>
@@ -91,56 +112,27 @@ class Todo extends Component{
     this.props.todoActions.completeTodo(todo.index)
   }
 
+  _handleChange(event) {
+    this.setState({ title: event.target.value });
+  }
+
   _onMark(event, todo) {
     this.props.todoActions.markTodo(todo.index)
   }
 
+  _onEdit(event, todo) {
+    if (!this.state.isEdit)
+      this.setState({ isEdit: true })
+  }
+
+  _onCloseTask() {
+    this.setState({
+      title: this.props.todo.title,
+      isEdit: false
+    });
+  }
+
 }
-
-const TodoContainer = styled.div`
-  margin-top: 10px;
-  padding: 20px;
-  background-color: ${props => props.theme.white};
-  label {
-    vertical-align: middle;
-  }
-`;
-
-const TodoTitle = styled.h2`
-  width: calc(100% - 90px );
-  display: inline-block;
-  font-size: 24px;
-  font-weight: bold;
-  color: ${props => props.isCompleted ? props.theme.silver : props.theme.darkGray};
-  text-decoration: ${props => props.isCompleted ? 'line-through' : 'none'};
-  margin: 0 0 0 10px;
-  vertical-align: middle;
-`;
-
-const TodoIfnoWrapper = styled.div`
-  margin-top: 10px;
-  color: ${props => props.theme.materialSteel};
-  span{
-    margin-right: 10px;
-  }
-  .fa-icon{
-    vertical-align: text-top;
-    font-size: 20px;
-    padding-right: 5px;
-  }
-`;
-
-const InfoText = styled.span`
-  vertical-align: bottom;
-  font-size: 14px;
-  display: ${props => props.comment? 'inline-block' : 'inline'};
-  text-overflow: ${props => props.comment? 'ellipsis' : 'clip'};
-  width: ${props => props.comment? '140px' : 'auto'};
-  white-space: nowrap;
-  overflow : hidden;
-  color: ${props => props.theme.darkGray};
-`;
-
 
 const mapStateToProps = state => {
   return state

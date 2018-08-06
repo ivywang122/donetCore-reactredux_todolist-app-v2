@@ -9,7 +9,7 @@ import Dropzone from 'react-dropzone'
 import { EditTodoWrapper, EditTodoBtnWrapper, 
   Block, Title, Content, DropText, 
   FilesContainer, DropEnterBlock, TextArea, 
-  BtnAddTask, BtnCancel, WariningText} from '../styled/components/EditTodoStyled'
+  BtnAdd, BtnCancel, WariningText} from '../styled/components/EditTodoStyled'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import actions from '../store/actions'
@@ -28,6 +28,8 @@ class EditTodo extends Component {
     this.handleTextChange = this._handleTextChange.bind(this);
     this.onAddTodo = this._onAddTodo.bind(this);
     this.onCancelTodo = this._onCancelTodo.bind(this);
+    this.onSaveTodo = this._onSaveTodo.bind(this);
+    this.onCancelSaveTodo = this._onCancelSaveTodo.bind(this);
 
     this.state = {
       title: this.props.title,
@@ -36,10 +38,25 @@ class EditTodo extends Component {
       selectTime: undefined,
       timeFormat: 'h:mm a',
       files: [],
+      cacheFiles: [],
       comment: '',
       dropzoneActive: false,
       warningText: '',
       wrapperHeight: 551
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.forEditSave && this.props.todo) {
+      let todo = this.props.todo;
+      this.setState({
+        selectedDay: todo.selectedDay,
+        selectTime: todo.selectTime,
+        cacheFiles: [...todo.files],
+        files: todo.files,
+        comment: todo.comment,
+        wrapperHeight: 551 + todo.files.length * 31
+      })
     }
   }
 
@@ -71,6 +88,7 @@ class EditTodo extends Component {
               onDayChange={this.handleDayPick} />
             <TimePicker use12Hours inputReadOnly
               showSecond={false}
+              minuteStep={15}
               defaultValue={this.state.selectTime}
               value={this.state.selectTime}
               onChange={this.handleTimePick}
@@ -112,11 +130,19 @@ class EditTodo extends Component {
           </Content>
         </Block>
 
-
-        <EditTodoBtnWrapper>
-          <BtnCancel onClick={this.onCancelTodo}><MdClose /> Cancel</BtnCancel>
-          <BtnAddTask onClick={this.onAddTodo}><FaPlus /> Add Task</BtnAddTask>
-        </EditTodoBtnWrapper>
+        {this.props.forEditSave?
+          /* For edit Existing Todo */
+          <EditTodoBtnWrapper>
+            <BtnCancel onClick={this.onCancelSaveTodo}><MdClose /> Cancel</BtnCancel> 
+            <BtnAdd onClick={this.onSaveTodo}><FaPlus /> Save</BtnAdd>
+          </EditTodoBtnWrapper>      
+          :
+          /* For Add New Todo */
+          <EditTodoBtnWrapper>
+            <BtnCancel onClick={this.onCancelTodo}><MdClose /> Cancel</BtnCancel>
+            <BtnAdd onClick={this.onAddTodo}><FaPlus /> Add Task</BtnAdd>
+          </EditTodoBtnWrapper>
+        }
 
       </EditTodoWrapper>
     );
@@ -181,10 +207,14 @@ class EditTodo extends Component {
 
     if(files.length === 0)
       wrapperHeight = 552;
-    else 
-      wrapperHeight = wrapperHeight - 31;
+    else {
+      if( (wrapperHeight - 551) % 31 === 0 )
+        wrapperHeight = wrapperHeight + 1 - 31;
+      else
+        wrapperHeight = wrapperHeight - 31;
+    }
 
-    this.setState({ files, wrapperHeight: wrapperHeight });
+    this.setState({ files, wrapperHeight: wrapperHeight })
   }
 
   _handleTextChange(event) {
@@ -240,6 +270,49 @@ class EditTodo extends Component {
     });
   
     this.props.onCloseTask();
+  }
+
+  _onSaveTodo() {
+    let todo = {
+      title: this.state.title,
+      comment: this.state.comment,
+      selectedDay: this.state.selectedDay,
+      selectTime: this.state.selectTime,
+      files: this.state.files,
+      isFile: this.state.files.length > 0,
+      isMarked: this.state.isMarked
+    }
+
+    if (this.isEmpty(todo.title)) {
+      this.setState({ warningText: '*Please type something as Task Title' })
+    } else {
+
+      this.setState({
+        selectedDay: undefined,
+        selectTime: undefined,
+        timeFormat: 'h:mm a',
+        files: [],
+        cacheFiles: [],
+        comment: '',
+        dropzoneActive: false,
+        warningText: '',
+        wrapperHeight: 551
+      }, this.props.onCloseTask())
+    }
+  }
+
+  _onCancelSaveTodo() {
+    let todo = this.props.todo;
+    this.setState({
+      selectedDay: todo.selectedDay,
+      selectTime: todo.selectTime,
+      files: this.state.cacheFiles,
+      comment: todo.comment,
+      wrapperHeight: 551 + this.state.cacheFiles.length * 31
+    }, () => {
+      this.props.todoActions.pushCacheToFiles(todo.index, this.state.cacheFiles)
+      this.props.onCloseTask()
+    })
   }
 
   isEmpty(str) {

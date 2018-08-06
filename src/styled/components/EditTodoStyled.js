@@ -1,14 +1,20 @@
 import styled, { keyframes, css } from 'styled-components'
 
 export const EditTodoWrapper = styled.div`
-  background-color: ${props => props.theme.white};
+  position: relative;
   border-radius: 0 0 3px 3px;
-  transition: ${props => props.height > 551? '0s' : '.8s ease-in-out' };
   transform-origin: 0 0;
+  background-color: ${props => props.theme.white};
   padding: ${props => props.isEdit? '20px' : '0px'};
   height: ${props => props.isEdit? props.height+'px' : '0px'};
   transform: ${props => props.isEdit? 'scaleY(1)' : 'scaleY(0)'};
-  position: relative;
+
+  ${props => {
+    if(props.height === 551 || (props.height - 551) % 31 === 0) 
+      return css`transition: .8s ease-in-out;`
+    else
+      return css`transition: 0s;`
+  }}
 
   ${props => props.isEdit && css`
     ${Block} {
@@ -147,7 +153,7 @@ const ButtonStyle = styled.button`
   transition: .25s;
 `;
 
-export const BtnAddTask = ButtonStyle.extend`
+export const BtnAdd = ButtonStyle.extend`
   background-color: ${props => props.theme.blue};
   color: ${props => props.theme.white};
   &:hover{

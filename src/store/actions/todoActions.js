@@ -47,3 +47,11 @@ export function addCompletedTodo(todo) {
     payload
   }
 }
+
+export function pushCacheToFiles(index, cacheFiles) {
+  return {
+    type: actionTypes.pushCacheToFiles,
+    index,
+    cacheFiles
+  }
+}

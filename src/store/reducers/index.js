@@ -47,6 +47,12 @@ const reducers = {
     }
 
     return [...state, todo]
+  },
+
+  [actionTypes.pushCacheToFiles]: (state, action) => {
+    return state.map(todo =>
+      todo.index === action.index ? { ...todo, files: action.cacheFiles } : todo
+    )
   }
 
 }
