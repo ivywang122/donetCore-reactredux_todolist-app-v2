@@ -14,6 +14,8 @@
 
   ---
 
+[Live Demo](https://ivywang122.github.io/donetCore-reactredux_todolist-app-v2/)
+
   ## 實作：
 
   1. 動態效果
