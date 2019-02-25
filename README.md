@@ -23,7 +23,15 @@
   5. 拖曳上傳
   6. 編輯todo
 
-  
+  ## DEMO：
+
+  ![image](https://github.com/ivywang122/donetCore-reactredux_todolist-app-v2/blob/master/images/001.gif)
+
+  ![image](https://github.com/ivywang122/donetCore-reactredux_todolist-app-v2/blob/master/images/002.gif)
+
+  ![image](https://github.com/ivywang122/donetCore-reactredux_todolist-app-v2/blob/master/images/003.gif)
+
+
 
 
 
