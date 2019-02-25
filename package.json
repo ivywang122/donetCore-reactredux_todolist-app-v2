@@ -2,6 +2,7 @@
   "name": "dotnet_reactredux",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ivywang122.github.io/donetCore-reactredux_todolist-app-v2",
   "dependencies": {
     "bootstrap": "^4.1.1",
     "history": "^4.7.2",
@@ -41,8 +42,10 @@
     "start-js": "cross-env NODE_PATH=./src && react-scripts start",
     "start": "cross-env NODE_PATH=./src && rimraf ./build && npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
-    "build": "cross-env NODE_PATH=./src && npm-run-all build-css build-js",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
